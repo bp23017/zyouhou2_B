@@ -84,5 +84,9 @@ public class ClientManager {
 
         return "redirect:/"; 
     }
+    @GetMapping("/matchingwait")
+    public String matchingwait() {
+        return "matchingwait";
+    }
 
 }
