@@ -81,7 +81,7 @@ public class ClientController {
         
         repository.save(newAccount); 
 
-        return "start"; 
+        return "redirect:/"; 
     }
 
 }
