@@ -4,6 +4,10 @@ const logout = document.querySelector('#logout');
 const statusModal = document.getElementById('statusModal');
 const closeBtn = document.getElementById('closeModal');
 const statusButton = document.getElementById('statusButton');
+const matching = document.getElementById('matching');
+const error1 = document.querySelector('#error-msg1');
+const error2 = document.querySelector('#error-msg2');
+
 
 
 if(showLoginButton){
@@ -44,9 +48,9 @@ if(logout){
   });
 }
 
-if(gameStart){
-  gameStart.addEventListener('click',function(){
-    window.location.href = "/matchingwait" 
+if(matching){
+  matching.addEventListener('click',function(){
+    window.location.href = "/matchingWait" 
   })
 };
 
@@ -63,7 +67,6 @@ if(logout){
   });
 }
 
-// 【エラー解消箇所】定義したあとなら if 文が正しく動作します
 if(statusButton && statusModal){
   statusButton.addEventListener('click', function(){
     statusModal.style.display = "block";

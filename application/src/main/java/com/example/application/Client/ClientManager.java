@@ -107,9 +107,9 @@ public String logout(HttpSession session) {
 
         return "redirect:/"; 
     }
-    @GetMapping("/matchingwait")
-    public String matchingwait() {
-        return "matchingwait";
+    @GetMapping("/matchingWait")
+    public String matchingWait() {
+        return "matchingWait";
     }
 
 
