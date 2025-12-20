@@ -61,8 +61,6 @@ public class ClientManager {
         return "result";
     }
 
-    // ClientController.java に追加
-
 @GetMapping("/logout")
 public String logout(HttpSession session) {
     // セッションを無効化してログイン情報を消す

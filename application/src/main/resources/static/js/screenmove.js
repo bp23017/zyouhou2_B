@@ -33,30 +33,6 @@ showRegisterButton.addEventListener('click',function(e){
    
 })};
 
-
-if(logout){
-  logout.addEventListener('click', function(e){
-    // formのデフォルトの動きを止める（もしform内にある場合）
-    e.preventDefault();
-    const logoutConfirm = window.confirm("ログアウトしますか？");
-    if(logoutConfirm){
-      // 直接 / に行くのではなく、コントローラーのログアウト処理を呼ぶ
-      window.location.href = "/logout"; 
-    } else {
-      alert("ログアウトをキャンセルしました!!");
-    }
-  });
-}
-
-if(matching){
-  matching.addEventListener('click',function(){
-    window.location.href = "/matchingWait" 
-  })
-};
-
-
-
-
 if(logout){
   logout.addEventListener('click', function(e){
     e.preventDefault();
