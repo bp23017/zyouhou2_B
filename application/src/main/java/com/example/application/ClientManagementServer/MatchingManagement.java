@@ -82,7 +82,8 @@ public class MatchingManagement {
         // 待機中グループを取り出して削除
         List<PlayerEntry> group = roomCreationWaitMap.remove(msg.getMatchId());
 
-        ApplicationToClientManagementMessage event = new ApplicationToClientManagementMessage(msg.getMatchId(),
+        ApplicationToClientManagementMessage event = new ApplicationToClientManagementMessage("MATCH_FOUND",
+                msg.getMatchId(),
                 msg.getRoomId());
         String eventJson = gson.toJson(event);
 
