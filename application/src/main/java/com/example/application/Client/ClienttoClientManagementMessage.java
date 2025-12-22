@@ -1,18 +1,14 @@
 package com.example.application.Client;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-public class ClientToClientManagementMessage {
-    String userName;
-    int passWord;
-    String taskName;
-    boolean authenticationFlag;
-    int gameRecord;
+@Getter
+@AllArgsConstructor
+public class ClienttoClientManagementMessage {
+    private String userName;
+    private int passWord;
+    private String task;
+    private boolean isMatched;
+    private int gameRecord;
 
-    public ClientToClientManagementMessage(String userName,int passWord,String taskName,boolean authenticationFlag,int gameRecord){
-this.userName=userName;
-this.passWord=passWord;
-this.taskName=taskName;
-this.authenticationFlag=authenticationFlag;
-this.gameRecord=gameRecord;
-    }
-    
 }
