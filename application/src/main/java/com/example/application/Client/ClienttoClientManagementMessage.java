@@ -7,7 +7,7 @@ import lombok.Getter;
 public class ClientToClientManagementMessage {
     private String userId;
     private String userName;
-    private int password;
+    private String password;
     private String taskName;
     private boolean isMatched;
     private int gameRecord;

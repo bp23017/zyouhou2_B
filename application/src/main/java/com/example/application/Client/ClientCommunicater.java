@@ -88,7 +88,7 @@ public class ClientCommunicater implements Runnable{
         while(session != null && session.isOpen()){
             try {
                 //タスク情報を送信
-                ClientToClientManagementMessage message = new ClientToClientManagementMessage(null,0,"match",true,0);
+                ClientToClientManagementMessage message = new ClientToClientManagementMessage(null,null,null,"match",true,0);
                 String jsonMessage = gson.toJson(message);
                 sendData(jsonMessage);
                 // sampleIncrement++;
