@@ -18,7 +18,6 @@ public class Room {
 
     public void addPlayer(Player player) {
         if (players.size() < MAX_PLAYERS) {
-            player.setColor("p" + players.size()); // p0, p1, p2, p3
             players.add(player);
         }
     }

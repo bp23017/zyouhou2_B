@@ -17,21 +17,13 @@ import java.net.URI;
 @AllArgsConstructor
 @NoArgsConstructor
 @ClientEndpoint
-<<<<<<< HEAD
-public class ClientCommunicater implements Runnable{
-    //タスク番号、送られてきた際は初期値の0のまま(林)
-    private int taskNum=10;
-    //Json化したタスクで使う情報
-    private String taskName;
-    //接続が確立したときに手に入るオブジェクト、通信パイプの役割(林)
-=======
+
 public class ClientCommunicater implements Runnable {
     // タスク番号、送られてきた際は初期値の0のまま(林)
     private int taskNum = 10;
     // Json化したタスクで使う情報
     private String task;
     // 接続が確立したときに手に入るオブジェクト、通信パイプの役割(林)
->>>>>>> 734b77364d3ee20c2cbb0fce841e53bc3e08fdb3
     Session session;
     // 通信を行うためのコンテナ
     static WebSocketContainer container;
@@ -114,17 +106,12 @@ public class ClientCommunicater implements Runnable {
 
         while (session != null && session.isOpen()) {
             try {
-<<<<<<< HEAD
-                //タスク情報を送信
-                ClientToClientManagementMessage message = new ClientToClientManagementMessage(null,null,null,"match",true,0);
-=======
                 // タスク情報を送信
                 ClientToClientManagementMessage message = new ClientToClientManagementMessage(
                         "LOGIN",
                         null,
                         null,
                         null);
->>>>>>> 734b77364d3ee20c2cbb0fce841e53bc3e08fdb3
                 String jsonMessage = gson.toJson(message);
                 sendData(jsonMessage);
                 // sampleIncrement++;

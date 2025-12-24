@@ -59,22 +59,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function setupPlayersUI(players) {
     const container = document.querySelector('.board-container');
-    players.forEach((p, i) => {
+    players.forEach((p) => { // i は使いません
         if (!document.getElementById(`player-${p.id}`)) {
             const piece = document.createElement('div');
             piece.id = `player-${p.id}`;
             piece.className = `player-piece`;
             
-            // 重要：サーバーから受け取った色を適用
-            piece.style.backgroundColor = p.color; // 背景色の変更
-            piece.style.borderColor = p.color;     // 枠線の変更
-            piece.style.color = "white";           // 文字（名前の1文字目）の色
-            console.log(`DOMに適用した背景色: ${piece.style.backgroundColor}`);
+            // サーバーから届いた p.color ("#ff4d4d" など) を直接セットする
+            piece.style.backgroundColor = p.color; 
+            piece.style.borderColor = p.color;
+            
+            console.log(`プレイヤー ${p.name} に色 ${p.color} を適用しました`);
             
             piece.innerText = p.name.substring(0, 1);
             container.appendChild(piece);
         }
-        localPlayerPositions[p.id] = p.currentPosition;
         updatePieceVisual(p.id, p.currentPosition);
     });
 }

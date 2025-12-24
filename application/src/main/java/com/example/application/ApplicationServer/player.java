@@ -13,9 +13,10 @@ public class Player {
     private int earnedUnits;
     private int expectedUnits;
 
-    public Player(String name) {
-        this.id = UUID.randomUUID().toString(); // 重複しないIDを生成
+    public Player(String name, String color) {
+        this.id = UUID.randomUUID().toString(); 
         this.name = name;
+        this.color = color;
         this.currentPosition = 0;
         this.earnedUnits = 0;
         this.expectedUnits = 25;

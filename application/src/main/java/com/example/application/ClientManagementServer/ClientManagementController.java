@@ -2,10 +2,7 @@ package com.example.application.ClientManagementServer;
 
 import com.example.application.Client.ClientToClientManagementMessage;
 import com.example.application.ClientManagementServer.Message.ClientMessage;
-<<<<<<< HEAD
-=======
 import com.example.application.ClientManagementServer.Message.ApplicationToClientManagementMessage;
->>>>>>> 734b77364d3ee20c2cbb0fce841e53bc3e08fdb3
 import com.google.gson.Gson;
 import com.example.application.ClientManagementServer.AccountManagement;
 
@@ -33,11 +30,8 @@ public class ClientManagementController {
     }
 
     public void processApplicationMessage(String json, Session session) {
-<<<<<<< HEAD
-        ClientToClientManagementMessage msg = gson.fromJson(json, ClientToClientManagementMessage.class);
-=======
         ApplicationToClientManagementMessage msg = gson.fromJson(json, ApplicationToClientManagementMessage.class);
->>>>>>> 734b77364d3ee20c2cbb0fce841e53bc3e08fdb3
+
         System.out.println("[ClientManagementController] request: " + msg.getTaskName());
         switch (msg.getTaskName()) {
             case "MATCH_CREATED" -> handleMatchCreated(msg, session);
