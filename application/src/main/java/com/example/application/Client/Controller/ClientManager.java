@@ -1,24 +1,40 @@
-package com.example.application.Client;
+package com.example.application.Client.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.application.ApplicationServer.Controller.CreditManager;
+import com.example.application.ApplicationServer.Controller.DiceController;
+import com.example.application.Client.Entity.Account;
+import com.example.application.Client.Repository.AccountRepository;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
 
 
 @Controller
-public class ClientController {
+public class ClientManager {
+    private DiceController diceController;
+    private CreditManager creditManager;
+    private int currentPosition = 0;
 
+    public ClientManager(DiceController diceController, CreditManager creditManager) {
+        this.diceController = diceController;
+        this.creditManager = creditManager;
+    }
     @Autowired
     private AccountRepository repository;
 
     @GetMapping("/")
     public String home() {
+        
         return "home";
     }
 
@@ -28,24 +44,48 @@ public class ClientController {
     }
 
     @GetMapping("/game")
-    public String login() {
-        return "game";
+    public String index(Model model) {
+
+        // 1. サーバー側のデータをリセット
+        this.currentPosition = 0; 
+        creditManager.reset();
+
+        // 2. HTML側に初期値を渡す（Thymeleaf用）
+        model.addAttribute("earnedUnits", 0);
+        model.addAttribute("expectedUnits", 25);
+        model.addAttribute("result", "ダイスを振ってください");
+        
+        return "game"; // game.html を表示
     }
 
     @GetMapping("/score")
-    public String register() {
-        return "score";
+    public String showScore(HttpSession session, Model model) {
+    // 1. セッションからログイン中の名前を取得
+    String loginName = (String) session.getAttribute("loginName");
+
+    if (loginName != null) {
+        // 2. データベースからユーザー情報を検索
+        Optional<Account> userOpt = repository.findById(loginName);
+        
+        if (userOpt.isPresent()) {
+            // 3. データをModelに入れてHTMLに渡す
+            model.addAttribute("account", userOpt.get());
+        }
     }
+    
+    return "score"; // score.htmlを表示
+}
 
     @GetMapping("/rule")
     public String rule() {
         return "rule";
     }
 
-    @GetMapping("/result")
-    public String result() {
-        return "result";
-    }
+@GetMapping("/logout")
+public String logout(HttpSession session) {
+    session.invalidate();
+    return "redirect:/";
+}
 
     
     @PostMapping("/login-process")
@@ -78,10 +118,17 @@ public class ClientController {
         Account newAccount = new Account();
         newAccount.setUsername(name);
         newAccount.setPassword(pass);
+        newAccount.setId(UUID.randomUUID().toString());
         
         repository.save(newAccount); 
 
-        return "start"; 
+        return "redirect:/"; 
     }
+
+    @GetMapping("/matchingWait")
+    public String matchingWait() {
+        return "matchingWait";
+    }
+
 
 }
