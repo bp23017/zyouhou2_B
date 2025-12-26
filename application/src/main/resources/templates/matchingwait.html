@@ -31,9 +31,8 @@
 
         <a th:href="@{/start}" class="cancel-btn">キャンセル</a>
     </div>
-
-   <script th:inline="javascript">
-    const loginName = /*[[${session.loginName}]]*/ 'Guest';
+    <script th:inline="javascript">
+        const loginName = /*[[${session.loginName}]]*/ 'Guest';
     // パスから /app を抜く
     const socket = new WebSocket("ws://localhost:8080/client-management");
 
@@ -59,7 +58,6 @@
     };
 
     function updatePanels(players) {
-        // 1〜4番目のパネルを更新
         for (let i = 1; i <= 4; i++) {
             const slot = document.getElementById(`p${i}`);
             if (!slot) continue;
@@ -76,6 +74,6 @@
             }
         }
     }
-</script>
+    </script>
 </body>
 </html>

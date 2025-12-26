@@ -16,20 +16,15 @@ public class DiceController {
      */
     public int executeRoll(String itemType, Integer targetValue) {
         if ("JUST".equals(itemType) && targetValue != null) {
-            // ジャストダイス：指定された値をそのまま返す
             return targetValue;
         }
 
         if ("DOUBLE".equals(itemType)) {
-            // ダブルダイス：2回振って合計を返す
             return roll() + roll();
         }
 
-        // 通常：1回振る
         return roll();
     }
-
-    // 純粋に1回だけ振る内部メソッド
     public int roll() {
         return random.nextInt(6) + 1;
     }

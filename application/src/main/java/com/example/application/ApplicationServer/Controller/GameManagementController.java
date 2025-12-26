@@ -13,9 +13,6 @@ public class GameManagementController {
     private final RoomManager roomManager = new RoomManager();
     private final DiceController diceController = new DiceController();
 
-    /**
-     * WebSocket経由で届くゲーム内メッセージを処理する
-     */
    public void processGameMessage(String json, Session session) {
     Map<String, Object> msg = gson.fromJson(json, Map.class);
     String taskName = (String) msg.get("taskName");
@@ -36,9 +33,6 @@ public class GameManagementController {
     }
 }
 
-    /**
-     * ダイスを振り、移動処理と単位加算を行い、全員に同期する
-     */
     private void handleRoll(Map<String, Object> msg) {
         String roomId = (String) msg.get("roomId");
         String playerId = (String) msg.get("playerId");
@@ -63,7 +57,6 @@ public class GameManagementController {
         int newPos = (oldPos + rolledNumber) % 20;       // 全20マスの計算
 
         // 4. 一周（スタート地点：0番マスを通過）判定
-        // CreditManager の graduateUnits ロジックに基づき、expectedUnitsを加算
         if (oldPos + rolledNumber >= 20) {
             int earned = currentPlayer.getEarnedUnits();
             int expected = currentPlayer.getExpectedUnits();
@@ -81,7 +74,6 @@ public class GameManagementController {
         // 6. 卒業判定（124単位以上で卒業）
         boolean isGraduated = currentPlayer.getEarnedUnits() >= 25;
 
-        // 7. 全プレイヤーへリアルタイム通知（ブロードキャスト）
         Map<String, Object> response = new HashMap<>();
         response.put("taskName", "GAME_UPDATE");
         response.put("lastPlayerId", playerId);    // 誰が振ったか
@@ -94,9 +86,6 @@ public class GameManagementController {
         broadcastToRoom(room, response);
     }
 
-    /**
-     * 指定されたルームの全プレイヤーにメッセージを一斉送信する
-     */
     private void broadcastToRoom(Room room, Object messageObj) {
         String json = gson.toJson(messageObj);
         for (Player p : room.getPlayers()) {

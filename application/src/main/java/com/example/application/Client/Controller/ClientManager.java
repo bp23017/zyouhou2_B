@@ -83,9 +83,7 @@ public class ClientManager {
 
 @GetMapping("/logout")
 public String logout(HttpSession session) {
-    // セッションを無効化してログイン情報を消す
     session.invalidate();
-    // ログイン画面（/）へリダイレクト
     return "redirect:/";
 }
 

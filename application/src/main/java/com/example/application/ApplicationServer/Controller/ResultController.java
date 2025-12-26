@@ -49,7 +49,6 @@ public class ResultController {
             System.out.printf("[%d位] %s : %d 単位\n", currentRank, p.getName(), p.getEarnedUnits());
         }
 
-        // 3. データベース更新と実行結果の出力
         if (!room.isRankUpdated()) {
             System.out.println("------------------------------------------");
             System.out.println("[Database Update Log]");
@@ -68,7 +67,6 @@ public class ResultController {
 
     private void updateAndPrintDbStatus(List<RankedPlayer> ranking) {
         for (RankedPlayer rp : ranking) {
-            // ユーザーID（名前）で検索
             accountRepository.findById(rp.name()).ifPresentOrElse(acc -> {
                 int newVal = 0;
                 switch (rp.rank()) {
@@ -78,10 +76,8 @@ public class ResultController {
                     case 4 -> { acc.setRank4(acc.getRank4() + 1); newVal = acc.getRank4(); }
                 }
                 accountRepository.save(acc);
-                // 更新成功をSystem.outに出力
                 System.out.printf("  [SUCCESS] Player: %-10s | Rank%d Count -> %d\n", rp.name(), rp.rank(), newVal);
             }, () -> {
-                // ユーザーが見つからなかった場合
                 System.out.printf("  [ERROR]   Player: %-10s | Not found in Database.\n", rp.name());
             });
         }

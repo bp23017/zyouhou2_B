@@ -1,7 +1,3 @@
-    /**
- * game.js (WebSocket ターン同期強化版)
- */
-
 // 1. URLパラメータから情報を取得
 const urlParams = new URLSearchParams(window.location.search);
 const myPlayerId = urlParams.get('playerId');
@@ -101,9 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.onclick = (e) => { if (e.target == modal) modal.style.display = "none"; };
 });
 
-/**
- * 手番に応じてUI（ボタン・メッセージ）を更新する
- */
+
 function handleTurnChange(nextId) {
     const diceBtn = document.getElementById('diceStart');
     const eventMsg = document.getElementById('event-message');
@@ -127,9 +121,7 @@ function handleTurnChange(nextId) {
     }
 }
 
-/**
- * 駒を生成して配置する
- */
+
 function setupPlayersUI(players) {
     const container = document.querySelector('.board-container');
     players.forEach((p) => {
@@ -145,9 +137,6 @@ function setupPlayersUI(players) {
     });
 }
 
-/**
- * 駒を指定のセル位置へ移動させる
- */
 function updatePieceVisual(playerId, cellIndex) {
     const piece = document.getElementById(`player-${playerId}`);
     const cell = document.getElementById(`cell-${cellIndex}`); //

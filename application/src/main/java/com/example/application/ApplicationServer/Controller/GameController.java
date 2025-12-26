@@ -21,9 +21,6 @@ public class GameController {
         this.diceController = diceController;
     }
 
-    /**
-     * ダイスを振る処理（4人対戦対応）
-     */
     @PostMapping("/roll")
     public ResponseEntity<?> rollDice(
             @RequestParam String roomId,
@@ -53,7 +50,6 @@ public class GameController {
 
         // 4. スタート（0番マス）通過判定
         if (oldPos + rolledNumber >= 20) {
-            // 単位取得処理（Playerオブジェクト内の単位を増やす）
             currentPlayer.setEarnedUnits(currentPlayer.getEarnedUnits() + currentPlayer.getExpectedUnits());
         }
 
