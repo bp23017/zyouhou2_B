@@ -1,12 +1,14 @@
-package com.example.application.Client;
+package com.example.application.Client.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.application.ApplicationServer.CreditManager;
-import com.example.application.ApplicationServer.DiceController;
+import com.example.application.ApplicationServer.Controller.CreditManager;
+import com.example.application.ApplicationServer.Controller.DiceController;
+import com.example.application.Client.Entity.Account;
+import com.example.application.Client.Repository.AccountRepository;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import java.util.Optional;

@@ -1,9 +1,9 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Message;
 import lombok.Data;
 import java.util.List;
 
 @Data
-public class MessageToClient {
+public class ApplicationToClientMessage {
     private int roomId;
     private int gameStatus;
     private int userId;

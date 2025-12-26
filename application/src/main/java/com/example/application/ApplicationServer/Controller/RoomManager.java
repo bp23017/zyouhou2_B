@@ -1,6 +1,9 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Controller;
 
 import org.springframework.stereotype.Service;
+
+import com.example.application.ApplicationServer.Entity.Room;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 

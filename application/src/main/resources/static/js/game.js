@@ -65,7 +65,6 @@ function setupPlayersUI(players) {
             piece.id = `player-${p.id}`;
             piece.className = `player-piece`;
             
-            // サーバーから届いた p.color ("#ff4d4d" など) を直接セットする
             piece.style.backgroundColor = p.color; 
             piece.style.borderColor = p.color;
             
@@ -96,7 +95,6 @@ function updateTurnStatus(room) {
 
 function syncPlayerPieces(players) {
     players.forEach(p => {
-        // サーバー上の位置が、手元の記録と違っていたら移動させる
         if (localPlayerPositions[p.id] !== p.currentPosition) {
             console.log(`${p.name}が移動しました`);
             updatePieceVisual(p.id, p.currentPosition);

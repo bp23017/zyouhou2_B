@@ -1,4 +1,4 @@
-package com.example.application.Client;
+package com.example.application.Client.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

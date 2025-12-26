@@ -1,8 +1,9 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Controller;
 
 public class PlayerNotifier {
     private int userId;

@@ -1,4 +1,4 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Controller;
 
 import org.springframework.stereotype.Service;
 import java.util.Random;

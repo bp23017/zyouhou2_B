@@ -1,9 +1,9 @@
 package com.example.application.ClientManagementServer;
 
-import com.example.application.Client.ClientToClientManagementMessage;
 import com.example.application.ClientManagementServer.Message.ClientMessage;
 import com.example.application.ClientManagementServer.Message.ApplicationToClientManagementMessage;
 import com.google.gson.Gson;
+import com.example.application.Client.Entity.ClientToClientManagementMessage;
 import com.example.application.ClientManagementServer.AccountManagement;
 
 import jakarta.websocket.Session;

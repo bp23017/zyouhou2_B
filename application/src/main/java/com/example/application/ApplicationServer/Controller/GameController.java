@@ -1,6 +1,10 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Controller;
 
 import org.springframework.web.bind.annotation.*;
+
+import com.example.application.ApplicationServer.Entity.Player;
+import com.example.application.ApplicationServer.Entity.Room;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.*;

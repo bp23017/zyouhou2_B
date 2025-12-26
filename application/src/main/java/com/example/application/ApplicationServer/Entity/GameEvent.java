@@ -1,4 +1,4 @@
-package com.example.application.ApplicationServer;
+package com.example.application.ApplicationServer.Entity;
 
 import lombok.Data;
 

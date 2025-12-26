@@ -1,8 +1,10 @@
-package com.example.application.Client;
+package com.example.application.Client.Controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import com.example.application.Client.Entity.ClientToClientManagementMessage;
 import com.google.gson.Gson;
 
 import jakarta.websocket.ClientEndpoint;
