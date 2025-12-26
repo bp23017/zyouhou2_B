@@ -77,7 +77,6 @@ public class MatchingManagement {
      */
     public void onRoomCreated(String json) {
         ApplicationToClientManagementMessage msg = gson.fromJson(json, ApplicationToClientManagementMessage.class);
-
         // 待機中グループを取り出して削除
         List<PlayerEntry> group = roomCreationWaitMap.remove(msg.getMatchId());
 
