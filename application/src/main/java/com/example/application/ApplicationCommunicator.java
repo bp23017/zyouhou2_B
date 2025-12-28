@@ -66,21 +66,26 @@ public class ApplicationCommunicator {
         error.printStackTrace();
     }
 
-    public void sendData(Session session, String message) {
-        try {
-            if (session.isOpen()) {
-                session.getBasicRemote().sendText(message);
+    public static void sendData(Session session, Object messageData) {
+        if (session != null && session.isOpen()) {
+            try {
+                // ここでJSON変換を行う
+                String json = gson.toJson(messageData);
+                
+                // 送信
+                session.getAsyncRemote().sendText(json);
+                System.out.println("[AppCommunicator] 送信: " + json);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
     
-    /*  sendBroadcastDataいるかわからんけど一応
     public void sendBroadcastData(String message) {
         establishedSessions.forEach(session -> {
             sendData(session, message);
         });
     }
-    */
+    
 }
