@@ -42,16 +42,8 @@ public class ApplicationCommunicator {
         System.out.println("[AppCommunicator] 受信: " + message);
 
         try {
-            // 1. JSON (String) を オブジェクト (ClientToApplication) に変換
-            // ※ ClientToApplicationクラスをまだ作っていない場合はエラーになるので、
-            //    後で作る必要があります。
             ClientToApplication request = gson.fromJson(message, ClientToApplication.class);
 
-            // 2. RoomManagerに処理を依頼する
-            // どの部屋の操作か、誰の操作かなどの情報を渡す必要があります
-            // roomManager.executeOperation(request, session); のようなイメージ
-            
-            // ★今はまだRoomManagerの中身がないので、とりあえずオウム返しだけしておきます
             sendData(session, "サーバーが受信しました: " + message);
 
         } catch (Exception e) {

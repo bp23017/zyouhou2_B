@@ -6,6 +6,7 @@ import java.util.List;
 import jakarta.websocket.Session;
 
 public class Room {
+    private List<Session> sessionList = new ArrayList<>();
     
     // この部屋にいるプレイヤーのリスト
     private List<Player> playerList;
@@ -69,7 +70,12 @@ public class Room {
         }
     }
 
-    public void notifyToAll() {
-        // 必要ならGameManagerの通知メソッドを呼ぶ、あるいはGameManagerが直接配信する
+    //GameManager から直接呼ばれる
+    //これにより、授業中に抱えていた不安は解消？
+    public void notifyToAll(MessageToClient msg) {
+       for (Session session : this.sessionList) {
+            // 自分で変換せず、コミュニケータにオブジェクトをそのまま渡す
+            ApplicationCommunicator.sendData(session, msg);
+       }
     }
 }
