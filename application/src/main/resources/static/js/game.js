@@ -2,9 +2,12 @@
 const urlParams = new URLSearchParams(window.location.search);
 const myPlayerId = urlParams.get('playerId');
 const roomId = urlParams.get('roomId');
+const statusBtn = document.getElementById('status');
+const modal = document.getElementById('statusModal');
+const closeBtn = document.getElementById('closeModal');
 
 // 2. WebSocket接続 (ポート8080の共通窓口)
-const socket = new WebSocket("ws://localhost:8080/client-management");
+const socket = new WebSocket("ws://localhost:8080/game-server");
 
 // アイテムの状態管理
 let selectedItemType = null;

@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionManager {
+    // 変数名を GameManagementController と合わせる
     public static final Map<String, Session> userSessions = new ConcurrentHashMap<>();
 
-    public static void sendToUser(String playerId, String message) {
-        Session session = userSessions.get(playerId);
+    public static void sendToUser(String userId, String message) {
+        Session session = userSessions.get(userId);
         if (session != null && session.isOpen()) {
+            // 非同期でメッセージを送信
             session.getAsyncRemote().sendText(message);
         }
     }

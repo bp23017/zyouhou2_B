@@ -1,32 +1,22 @@
 package com.example.application.ApplicationServer.Controller;
 
-import com.example.application.ApplicationServer.Message.ApplicationMessage;
-import com.example.application.ApplicationServer.Message.ApplicationToClientManagementMessage;
 import com.google.gson.Gson;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
-import java.io.IOException;
-import java.util.UUID;
+import org.springframework.stereotype.Component;
 
-@ServerEndpoint("/application")
+@Component
+@ServerEndpoint("/game-server") // ✅ game.js からの接続先
 public class EndpointSample {
     private static final Gson gson = new Gson();
+    // ✅ 同じ ApplicationServer パッケージ内のコントローラを呼び出す
+    private static final GameManagementController gameController = new GameManagementController();
 
     @OnMessage
-    public void onMessage(String message, Session session) throws IOException {
-        System.out.println("[ApplicationServer] Received: " + message);
-        ApplicationMessage req = gson.fromJson(message, ApplicationMessage.class);
-
-        if ("CREATE_ROOM".equals(req.getTaskName())) {
-            String roomId = "room-" + UUID.randomUUID().toString().substring(0, 8);
-            
-            ApplicationToClientManagementMessage res = new ApplicationToClientManagementMessage(
-                "ROOM_CREATED",
-                req.getMatchId(),
-                roomId
-            );
-
-            session.getAsyncRemote().sendText(gson.toJson(res));
+    public void onMessage(String message, Session session) {
+        // ゲーム進行（ROLL, JOIN）のメッセージだけをここで処理
+        if (message.contains("GAME_JOIN") || message.contains("GAME_ROLL")) {
+            gameController.processGameMessage(message, session);
         }
     }
 }
