@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ゲーム終了後の結果表示および戦績の永続化を担当するコントローラー。
- * プレイヤーの順位を確定させ、その結果をデータベースに反映します。
- */
 @Controller
 public class ResultController {
     

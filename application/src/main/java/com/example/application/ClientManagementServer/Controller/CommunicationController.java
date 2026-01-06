@@ -18,6 +18,7 @@ public class CommunicationController {
         // 管理サーバーが担当するタスクのみを処理
         if (json.contains("LOGIN") || json.contains("REGISTER") || json.contains("MATCHING") || json.contains("LOGOUT")) {
             authController.processClientMessage(json, session);
+            System.out.println("[Communication] 管理サーバーでゲームメッセージを処理しました。");
         } else {
             System.out.println("[Communication] 警告: 管理サーバーでゲームメッセージを受信しました。無視します。");
         }
@@ -26,6 +27,7 @@ public class CommunicationController {
     public static void sendToUser(String userId, String message) {
         Session session = userSessions.get(userId);
         if (session != null && session.isOpen()) {
+            System.out.println("[Communication] Sending to " + userId + ": " + message);
             session.getAsyncRemote().sendText(message);
         }
     }
