@@ -11,12 +11,11 @@ public class GameManagementController {
     private final DiceController diceController = new DiceController();
     private final GameMap gameMap = new GameMap(); 
 
-    // ✅ RoomManager を安全に取得するメソッド
     private RoomManager getRoomManager() {
         return RoomManager.instance;
     }
 
-// GameManagementController.java
+
 
 public void processGameMessage(String json, Session session) {
     Map<String, Object> msg = gson.fromJson(json, Map.class);
@@ -25,7 +24,6 @@ public void processGameMessage(String json, Session session) {
     String roomId = (String) msg.get("roomId"); 
 
     if (playerId != null) {
-        // ✅ 修正：コメントアウトを外し、セッションを登録する
         SessionManager.userSessions.put(playerId, session); 
         resetAFKCount(roomId, playerId);
         System.out.println("[Game] Session registered for: " + playerId);
@@ -33,14 +31,11 @@ public void processGameMessage(String json, Session session) {
 
     switch (taskName) {
         case "GAME_JOIN" -> {
-            // ✅ 修正：RoomManagerから部屋を取得し、プレイヤーをリストに追加する
             RoomManager rm = getRoomManager();
             Room room = rm.getRoom(roomId);
             if (room != null) {
-                // 重複チェックをしてから追加
                 boolean exists = room.getPlayers().stream().anyMatch(p -> p.getId().equals(playerId));
                 if (!exists) {
-                    // 名前とIDを同じにして、仮の色(redなど)で追加
                     Player newPlayer = new Player(playerId, "red");
                     room.getPlayers().add(newPlayer);
                     System.out.println("[Game] 部屋 " + roomId + " にプレイヤー " + playerId + " を追加しました。現在: " + room.getPlayers().size() + "人");
@@ -66,7 +61,6 @@ public void processGameMessage(String json, Session session) {
     
     Room room = rm.getRoom(roomId);
     if (room == null) {
-        // ✅ 部屋が見つからない場合にログを出すようにする
         System.out.println("[Game] 部屋が見つかりません: " + roomId);
         return;
     }
@@ -78,7 +72,7 @@ public void processGameMessage(String json, Session session) {
 
     if (currentPlayer.getId().equals(playerId) && currentPlayer.isSkipped()) {
         System.out.println("[Game] " + playerId + " は休みです。");
-        currentPlayer.setSkipped(false); // フラグ解除
+        currentPlayer.setSkipped(false); 
 
         int nextIdx = (currentTurnIndex + 1) % room.getPlayers().size();
         room.setTurnIndex(nextIdx);
@@ -89,8 +83,8 @@ public void processGameMessage(String json, Session session) {
         response.put("diceValue", "休み"); 
         response.put("lastPlayerId", playerId);
         response.put("newPosition", currentPlayer.getCurrentPosition());
-        response.put("earnedUnits", currentPlayer.getEarnedUnits());   // ✅ 追加
-        response.put("expectedUnits", currentPlayer.getExpectedUnits()); // ✅ 追加
+        response.put("earnedUnits", currentPlayer.getEarnedUnits());   
+        response.put("expectedUnits", currentPlayer.getExpectedUnits());
         response.put("nextPlayerId", nextPlayer.getId());
         response.put("isGraduated", false);
         response.put("message", playerId + " は一回休みです。");
@@ -98,13 +92,12 @@ public void processGameMessage(String json, Session session) {
         broadcastToRoom(room, response);
         return;
     }
-        // ✅ 手番チェックのログを追加
+
     if (!currentPlayer.getId().equals(playerId)) {
         System.out.println("[Game] 却下: " + playerId + " の番ではありません。現在の手番: " + currentPlayer.getId());
         return;
     }
 
-        // --- ダイス実行 ---
         int rolledNumber = diceController.executeRoll(itemType, targetValue);
         System.out.println("[Game] ダイスの出目: " + rolledNumber);
 
