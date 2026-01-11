@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 
+// クライアント管理サーバーの通信を担当するコントローラ
 @Component
 @ServerEndpoint("/matching")
 public class CommunicationController {

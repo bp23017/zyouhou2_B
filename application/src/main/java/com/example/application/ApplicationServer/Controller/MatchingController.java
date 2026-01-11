@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+// マッチング関連のAPIを提供するコントローラクラス
 @RestController
 @RequestMapping("/api/matching")
 public class MatchingController {

@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 
+
+// ゲーム進行を担当するコントローラクラス(REST API経由)
+// 1回のリクエストに対して1回のレスポンスを返す窓口
 @RestController
 @RequestMapping("/api/game")
 public class GameController {

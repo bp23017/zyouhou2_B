@@ -34,6 +34,9 @@ public class GameMap {
         squareList.put(17, new GameEvent("必修を落とした... 予定単位-2", -2, GameEvent.EFFECT_NONE));
         squareList.put(18, new GameEvent("必修を落とした... 予定単位-2", -2, GameEvent.EFFECT_NONE));
 
+        squareList.put(10, new GameEvent("先輩から過去問を貰った！アイテムが復活！", 0, GameEvent.EFFECT_RECOVERY));
+        squareList.put(14, new GameEvent("先輩から過去問を貰った！アイテムが復活！", 0, GameEvent.EFFECT_RECOVERY));
+
     }
     /**
      * 指定された位置のイベントを取得する

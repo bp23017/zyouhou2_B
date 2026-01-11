@@ -26,7 +26,7 @@ public class AccountManagement {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginApi(String jsonBody) {
-        // Springの @RequestBody の代わりに Gson で手動解析します
+        // Springの @RequestBody の代わりに、Jerseyではメソッド引数として直接受け取ります
         Map<String, String> req = gson.fromJson(jsonBody, Map.class);
         String username = req.get("username");
         String password = req.get("password");
@@ -83,8 +83,6 @@ public static class MatchingRest {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getStatus(@QueryParam("roomId") String roomId) {
-        // MatchingManagementに実装されている部屋取得メソッドを呼び出す
-        // サンプルの MatchingController.java の中身を参考に実装します
         Object room = matchingManagement.getRoomById(roomId); 
         if (room != null) {
             return Response.ok(gson.toJson(room)).build();

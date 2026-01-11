@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 
 import jakarta.websocket.Session;
 
+// ゲームの大部分を担当するコントローラクラス(WebSocket経由)
+// ブラウザと常に接続し続ける双方向通信を担当するEndpointクラスから呼び出される
 public class GameManagementController {
     private final Gson gson = new Gson();
     private final DiceController diceController = new DiceController();

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.application.ApplicationServer.Entity.Player;
 import com.example.application.ApplicationServer.Entity.Room;
 
+// 結果画面を担当するコントローラクラス
 @Controller
 public class ResultController {
     

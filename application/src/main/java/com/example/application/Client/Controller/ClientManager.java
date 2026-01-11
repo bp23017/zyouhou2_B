@@ -8,13 +8,12 @@ import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 
-
-
+// クライアント側のマネージャーコントローラ
 @Controller
 public class ClientManager {
     private final RestTemplate restTemplate = new RestTemplate();
-
-    private final String AUTH_API_URL = "http://192.168.11.13:8082/api/auth";
+    private final String targetIp = "192.168.11.13"; //ここを自分のIPアドレスに変更してください
+    private final String AUTH_API_URL = "http://" + targetIp + ":8082/api/auth";
 
 
     @GetMapping("/") 

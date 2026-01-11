@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
+// データベースアクセスを担当するクラス
 @Repository
 public class DatabaseAccess {
 

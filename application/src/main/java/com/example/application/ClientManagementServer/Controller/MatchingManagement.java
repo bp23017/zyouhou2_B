@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 【管理サーバ(PC-A)専用】マッチング管理クラス
+ * 【管理サーバ専用】マッチング管理クラス
  * アプリケーションサーバのクラス(RoomManager等)への依存を完全に排除しました。
  */
 public class MatchingManagement {

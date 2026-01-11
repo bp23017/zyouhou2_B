@@ -9,6 +9,7 @@ import com.example.application.ClientManagementServer.Controller.AccountManageme
 
 import java.net.URI;
 
+// クライアント管理サーバーの起動クラス
 public class ManagementServerLauncher {
     static String contextRoot = "/app";
     static String protocol = "ws";
