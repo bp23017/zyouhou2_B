@@ -14,7 +14,7 @@ import jakarta.websocket.Session;
 public class GameManagementController {
     private final Gson gson = new Gson();
     private final DiceController diceController = new DiceController();
-    private final GameMap gameMap = new GameMap(); 
+    private final GameMap gameMap = new GameMap();
 
     private RoomManager getRoomManager() {
         return RoomManager.instance;
@@ -24,10 +24,10 @@ public class GameManagementController {
         Map<String, Object> msg = gson.fromJson(json, Map.class);
         String taskName = (String) msg.get("taskName");
         String playerId = (String) msg.get("playerId");
-        String roomId = (String) msg.get("roomId"); 
+        String roomId = (String) msg.get("roomId");
 
         if (playerId != null) {
-            SessionManager.userSessions.put(playerId, session); 
+            SessionManager.userSessions.put(playerId, session);
             resetAFKCount(roomId, playerId);
             System.out.println("[Game] Session registered for: " + playerId);
         }
@@ -42,7 +42,8 @@ public class GameManagementController {
                         Player newPlayer = new Player(playerId, "red");
                         newPlayer.setId(playerId);
                         room.getPlayers().add(newPlayer);
-                        System.out.println("[Game] 部屋 " + roomId + " にプレイヤー " + playerId + " を追加しました。現在: " + room.getPlayers().size() + "人");
+                        System.out.println("[Game] 部屋 " + roomId + " にプレイヤー " + playerId + " を追加しました。現在: "
+                                + room.getPlayers().size() + "人");
                     }
                 }
             }
@@ -62,7 +63,7 @@ public class GameManagementController {
             System.out.println("[Game] RoomManager が null です。");
             return;
         }
-    
+
         Room room = rm.getRoom(roomId);
         if (room == null) {
             System.out.println("[Game] 部屋が見つかりません: " + roomId);
@@ -74,9 +75,25 @@ public class GameManagementController {
         int currentTurnIndex = room.getTurnIndex();
         Player currentPlayer = room.getPlayers().get(currentTurnIndex);
 
+        if (!currentPlayer.getId().equals(playerId)) {
+            int idx = -1;
+            for (int i = 0; i < room.getPlayers().size(); i++) {
+                if (room.getPlayers().get(i).getId().equals(playerId)) {
+                    idx = i;
+                    break;
+                }
+            }
+            if (idx >= 0) {
+                System.out.println("[Game] ターン補正: " + playerId + " に合わせて turnIndex=" + idx + " へ修正");
+                room.setTurnIndex(idx);
+                currentTurnIndex = idx;
+                currentPlayer = room.getPlayers().get(idx);
+            }
+        }
+
         if (currentPlayer.getId().equals(playerId) && currentPlayer.isSkipped()) {
             System.out.println("[Game] " + playerId + " は休みです。");
-            currentPlayer.setSkipped(false); 
+            currentPlayer.setSkipped(false);
 
             int nextIdx = (currentTurnIndex + 1) % room.getPlayers().size();
             room.setTurnIndex(nextIdx);
@@ -84,15 +101,15 @@ public class GameManagementController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("taskName", "GAME_UPDATE");
-            response.put("diceValue", "休み"); 
+            response.put("diceValue", "休み");
             response.put("lastPlayerId", playerId);
             response.put("newPosition", currentPlayer.getCurrentPosition());
-            response.put("earnedUnits", currentPlayer.getEarnedUnits());   
+            response.put("earnedUnits", currentPlayer.getEarnedUnits());
             response.put("expectedUnits", currentPlayer.getExpectedUnits());
             response.put("nextPlayerId", nextPlayer.getId());
             response.put("isGraduated", false);
             response.put("message", playerId + " は一回休みです。");
-            
+
             // アイテム状態も返す
             response.put("usedDouble", currentPlayer.isUsedDouble());
             response.put("usedJust", currentPlayer.isUsedJust());
@@ -128,22 +145,22 @@ public class GameManagementController {
         // 移動処理
         int oldPos = currentPlayer.getCurrentPosition();
         int tempPos = oldPos + rolledNumber;
-        
+
         if (tempPos >= 20) {
-            callCreditManager(currentPlayer, true); 
+            callCreditManager(currentPlayer, true);
         }
-        
+
         int newPos = tempPos % 20;
         currentPlayer.setCurrentPosition(newPos);
 
         GameEvent event = gameMap.getGameEvent(newPos);
         if (event != null) {
             System.out.println("[Event発生] プレイヤー: " + playerId + " | マス: " + newPos + " | 内容: " + event.getEventContent());
-            
+
             int currentExpected = currentPlayer.getExpectedUnits();
             int adjustment = event.getCreditAdjustmentValue();
             currentPlayer.setExpectedUnits(currentExpected + adjustment);
-            
+
             System.out.println("[Event適用] 予定単位が更新されました: " + currentExpected + " -> " + currentPlayer.getExpectedUnits());
 
             if (event.getEventEffect() == GameEvent.EFFECT_SKIP) {
@@ -170,14 +187,14 @@ public class GameManagementController {
         response.put("expectedUnits", currentPlayer.getExpectedUnits());
         response.put("nextPlayerId", nextPlayer.getId());
         response.put("isGraduated", isGraduated);
-        
+
         // アイテム使用状況を返す
         response.put("usedDouble", currentPlayer.isUsedDouble());
         response.put("usedJust", currentPlayer.isUsedJust());
 
         System.out.println("[Game] 計算完了。ブラウザへ結果を送信します。");
         broadcastToRoom(room, response);
-        
+
         if (isGraduated) {
             endGame(room);
         }
@@ -190,9 +207,9 @@ public class GameManagementController {
         Room room = rm.getRoom(roomId);
         if (room != null) {
             room.getPlayers().stream()
-                .filter(p -> p.getId().equals(playerId))
-                .findFirst()
-                .ifPresent(p -> p.setAfkCount(0));
+                    .filter(p -> p.getId().equals(playerId))
+                    .findFirst()
+                    .ifPresent(p -> p.setAfkCount(0));
         }
     }
 
