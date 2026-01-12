@@ -1,33 +1,33 @@
-﻿#   情報実験II_B班
+﻿# 情報実験II_B班
 
 ## ServerAddress
+ClientManagementServer  
+WebSocket: ws://IPアドレス:8080  
+REST API: http://IPアドレス:8082  
 
-ClientManagemenetServer
+ApplicationServer  
+WebSocket: ws://IPアドレス:8081  
+REST API: http://IPアドレス:8081
 
-WebSocket:ws://IPアドレス:8080
+## IPアドレスの設定箇所
+接続先を変える場合は、以下を自分の環境のIPに書き換えてください。
 
-REST API:http://IPアドレス:8082
-
-ApplicationServer
-
-WebSocket:ws://IPアドレス:8081
-
-REST API:http://IPアドレス:8081
+- `application/src/main/resources/application.properties`
+  - `client.management.rest.base` (例: `http://<管理サーバIP>:8082`)
+  - `client.management.ws.uri`   (例: `ws://<管理サーバIP>:8080/app/matching`)
+  - `app.server.rest.base`       (例: `http://<アプリサーバIP>:8081/api`)
+  - `app.server.ws.uri`          (例: `ws://<アプリサーバIP>:8081/game-server`)
+- `application/src/main/java/com/example/application/ClientManagementServer/Controller/MatchingManagement.java`
+  - `sendRoomToAppServer` 内の `appBase`（`http://<アプリサーバIP>:8081/api`）
 
 ## IPアドレスの調べ方
-コマンドプロンプトでipconfigを実行
-
-Wireless LAN adapter Wi-Fiの欄のIPv4アドレスが自分のIPアドレスになる
-
+コマンドプロンプトで `ipconfig` を実行し、Wireless LAN adapter Wi-Fi の IPv4 アドレスを確認してください。
 
 ## 実行方法
-
-1. ClientManagementServerのManagementServerLauncherを実行する
-
-2. 画像の真ん中にある薄い｢run｣をクリックする
-![](application/src/main/resources/static/images/ApplicationStart.png)
-
-3. http://IPアドレス:8081にアクセスする
+1. ClientManagementServer を起動（`ManagementServerLauncher` を実行）  
+2. ApplicationServer を起動（`ApplicationServerLauncher` を実行）  
+3. クライアント（Client）を起動（`Application` を実行）  
+4. ブラウザで `http://localhost:8000` にアクセスし、ログイン → マッチング待機 → ゲーム開始
 
 ## 編集方法
 

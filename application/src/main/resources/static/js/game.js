@@ -9,8 +9,8 @@ const modal = document.getElementById('statusModal');
 const closeBtn = document.getElementById('closeModal');
 
 // 2. WebSocket接続
-const serverIp = window.location.hostname; 
-const socket = new WebSocket(`ws://${serverIp}:8081/game-server`);
+const config = window.GAME_CONFIG || {};
+const socket = new WebSocket(config.appWsUri || `ws://${window.location.hostname}:8081/game-server`);
 
 // 全プレイヤー情報とアイテムの状態管理
 let allPlayers = []; // 全員のインデックス特定用に保持
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (expectedUnitsDisplay) expectedUnitsDisplay.innerText = data.expectedUnits;
                 document.getElementById('modal-earned').innerText = data.earnedUnits;
                 document.getElementById('modal-expected').innerText = data.expectedUnits;
-                
+
                 // アイテムボタンの状態更新（使用済みの場合はボタンを無効化）
                 updateItemButtons(data.usedDouble, data.usedJust);
             }
@@ -71,9 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // 卒業判定
             if (data.isGraduated) {
+                // 同一オリジンのプロキシ経由でリザルト取得
+                const redirectUrl = `/proxy/result?roomId=${roomId}&playerId=${myPlayerId}`;
                 setTimeout(() => {
                     alert(`${data.lastPlayerId} さんが卒業しました！`);
-                    location.href = `/result?roomId=${roomId}`;
+                    location.href = redirectUrl;
                 }, 800);
             }
         }
@@ -93,8 +95,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 6. 初期化：現在の部屋の状態を取得 ---
     try {
-        const mgmtIp = "192.168.11.13"; // 管理サーバーのIP
-        const res = await fetch(`http://${mgmtIp}:8082/api/matching/status?roomId=${roomId}`);
+        const base = config.mgmtRestBase || `http://${window.location.hostname}:8082/api`;
+        const res = await fetch(`${base}/matching/status?roomId=${roomId}`);
         const room = await res.json();
         setupPlayersUI(room.players);
         handleTurnChange(room.players[room.turnIndex].id);
@@ -108,16 +110,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
         console.error("初期データの取得に失敗:", err);
     }
-    
+
     statusBtn.onclick = () => modal.style.display = "block";
     closeBtn.onclick = () => modal.style.display = "none";
 });
 
 function setupPlayersUI(players) {
-    allPlayers = players; 
+    allPlayers = players;
     const container = document.querySelector('.board-container');
     const board = document.getElementById('player-status-board'); // UIボードの取得
-    
+
     if (board) board.innerHTML = '';
 
     players.forEach((p, i) => {
