@@ -240,9 +240,19 @@ function updateItemButtons(usedDouble, usedJust) {
 window.selectItem = (type) => {
     selectedItemType = type;
     document.getElementById('selected-item-display').innerText = "使用予定: ダブルダイス";
+    document.getElementById('btn-cancel-item').style.display = 'inline-block';
 };
 window.selectJust = (val) => {
     selectedItemType = 'JUST';
     selectedTargetValue = val;
     document.getElementById('selected-item-display').innerText = `使用予定: ジャストダイス (${val})`;
+    document.getElementById('btn-cancel-item').style.display = 'inline-block';
+};
+
+// アイテム選択のキャンセル
+window.cancelItemSelection = () => {
+    selectedItemType = null;
+    selectedTargetValue = null;
+    document.getElementById('selected-item-display').innerText = "使用予定: なし";
+    document.getElementById('btn-cancel-item').style.display = 'none';
 };
