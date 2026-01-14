@@ -5,12 +5,13 @@ import org.springframework.web.bind.annotation.*;
 import com.example.application.ApplicationServer.Entity.Player;
 import com.example.application.ApplicationServer.Entity.Room;
 
-import ch.qos.logback.classic.pattern.SyslogStartConverter;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.*;
 
+
+// ゲーム進行を担当するコントローラクラス(REST API経由)
+// 1回のリクエストに対して1回のレスポンスを返す窓口
 @RestController
 @RequestMapping("/api/game")
 public class GameController {

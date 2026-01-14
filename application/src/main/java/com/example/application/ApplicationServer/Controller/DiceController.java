@@ -3,6 +3,8 @@ package com.example.application.ApplicationServer.Controller;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 
+// ダイスの振るロジックを担当するクラス
+
 @Service
 public class DiceController {
 

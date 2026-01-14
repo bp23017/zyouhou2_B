@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import com.example.application.ClientManagementServer.Entity.RankRecord;
 import com.example.application.ClientManagementServer.Entity.User;
 
-
+// データベースアクセスを担当するリポジトリクラス
 public class DatabaseAccess {
     String url = "jdbc:mysql://sql.yamazaki.se.shibaura-it.ac.jp:13308/db_group_b";
     String user = "group_b";

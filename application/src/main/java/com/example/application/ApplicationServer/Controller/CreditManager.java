@@ -3,6 +3,7 @@ package com.example.application.ApplicationServer.Controller;
 import org.springframework.stereotype.Service;
 import lombok.Data;
 
+// 単位管理を担当するクラス
 @Data
 @Service
 public class CreditManager {

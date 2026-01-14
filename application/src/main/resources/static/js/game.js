@@ -9,7 +9,8 @@ const modal = document.getElementById('statusModal');
 const closeBtn = document.getElementById('closeModal');
 
 // 2. WebSocket接続
-const socket = new WebSocket("ws://localhost:8080/game-server");
+const config = window.GAME_CONFIG || {};
+const socket = new WebSocket(config.appWsUri || `ws://${window.location.hostname}:8081/game-server`);
 
 // 全プレイヤー情報とアイテムの状態管理
 let allPlayers = []; // 全員のインデックス特定用に保持
@@ -56,6 +57,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (expectedUnitsDisplay) expectedUnitsDisplay.innerText = data.expectedUnits;
                 document.getElementById('modal-earned').innerText = data.earnedUnits;
                 document.getElementById('modal-expected').innerText = data.expectedUnits;
+
+                // アイテムボタンの状態更新（使用済みの場合はボタンを無効化）
+                updateItemButtons(data.usedDouble, data.usedJust);
             }
 
             // ⑤ ターンの強調表示（activeクラスの付け替え）
@@ -67,9 +71,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // 卒業判定
             if (data.isGraduated) {
+                // 同一オリジンのプロキシ経由でリザルト取得
+                const redirectUrl = `/proxy/result?roomId=${roomId}&playerId=${myPlayerId}`;
                 setTimeout(() => {
                     alert(`${data.lastPlayerId} さんが卒業しました！`);
-                    location.href = `/result?roomId=${roomId}`;
+                    location.href = redirectUrl;
                 }, 800);
             }
         }
@@ -89,23 +95,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- 6. 初期化：現在の部屋の状態を取得 ---
     try {
-        const res = await fetch(`/api/matching/status?roomId=${roomId}`);
+        const base = config.mgmtRestBase || `http://${window.location.hostname}:8082/api`;
+        const res = await fetch(`${base}/matching/status?roomId=${roomId}`);
         const room = await res.json();
         setupPlayersUI(room.players);
         handleTurnChange(room.players[room.turnIndex].id);
+
+        // 初期ロード時に自分のアイテム状態を確認してボタンを制御
+        const me = room.players.find(p => p.id === myPlayerId);
+        if (me) {
+            updateItemButtons(me.usedDouble, me.usedJust);
+        }
+
     } catch (err) {
         console.error("初期データの取得に失敗:", err);
     }
-    
+
     statusBtn.onclick = () => modal.style.display = "block";
     closeBtn.onclick = () => modal.style.display = "none";
 });
 
 function setupPlayersUI(players) {
-    allPlayers = players; 
+    allPlayers = players;
     const container = document.querySelector('.board-container');
     const board = document.getElementById('player-status-board'); // UIボードの取得
-    
+
     if (board) board.innerHTML = '';
 
     players.forEach((p, i) => {
@@ -143,14 +157,14 @@ function updatePieceVisual(playerId, positionIndex, playerIndex) {
     if (!piece || !cell) return;
 
     // 重なり防止：プレイヤーごとに位置をずらす
-    const offsetX = (playerIndex % 2) * 18;
-    const offsetY = Math.floor(playerIndex / 2) * 18;
+    const offsetX = (playerIndex % 2) * 50;
+    const offsetY = Math.floor(playerIndex / 2) * 50;
 
     const cellRect = cell.getBoundingClientRect();
     const containerRect = document.querySelector('.board-container').getBoundingClientRect();
 
-    piece.style.left = `${(cellRect.left - containerRect.left) + offsetX + 5}px`;
-    piece.style.top = `${(cellRect.top - containerRect.top) + offsetY + 5}px`;
+    piece.style.left = `${(cellRect.left - containerRect.left) + offsetX + 45}px`;
+    piece.style.top = `${(cellRect.top - containerRect.top) + offsetY + 30}px`;
 }
 
 function handleTurnChange(nextId) {
@@ -168,6 +182,39 @@ function handleTurnChange(nextId) {
         diceBtn.style.opacity = "0.5";
         diceBtn.style.boxShadow = "none";
         eventMsg.innerText = `${nextId} さんの番です...`;
+    }
+}
+
+// アイテムボタンの状態更新関数
+function updateItemButtons(usedDouble, usedJust) {
+    const warningMsg = document.getElementById('item-warning-msg');
+    let message = "";
+
+    // ダブルダイスボタンの制御
+    const doubleBtn = document.getElementById('btn-double');
+    if (doubleBtn && usedDouble) {
+        doubleBtn.disabled = true;
+        doubleBtn.innerText = "ダブルダイス (使用済)";
+        doubleBtn.style.backgroundColor = "#999";
+        doubleBtn.style.cursor = "not-allowed";
+        message = "※一度使用したアイテムは使えません";
+    }
+
+    // ジャストダイスボタン群の制御
+    const justContainer = document.getElementById('btn-just-container');
+    if (justContainer && usedJust) {
+        const buttons = justContainer.querySelectorAll('button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            btn.style.backgroundColor = "#999";
+            btn.style.cursor = "not-allowed";
+        });
+        message = "※一度使用したアイテムは使えません";
+    }
+
+    // メッセージ表示（どちらかが使用済みなら表示）
+    if (warningMsg) {
+        warningMsg.innerText = message;
     }
 }
 

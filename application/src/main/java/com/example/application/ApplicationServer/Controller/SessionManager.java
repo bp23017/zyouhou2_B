@@ -4,6 +4,8 @@ import jakarta.websocket.Session;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+// セッション管理を担当するクラス
 public class SessionManager {
     // 変数名を GameManagementController と合わせる
     public static final Map<String, Session> userSessions = new ConcurrentHashMap<>();

@@ -2,9 +2,11 @@ package com.example.application.ApplicationServer.Controller;
 
 import org.springframework.stereotype.Service;
 import com.example.application.ApplicationServer.Entity.Room;
-import jakarta.annotation.PostConstruct; // ✅ 追加
+import jakarta.annotation.PostConstruct; 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
+
+// 部屋管理を担当するクラス
 
 @Service
 public class RoomManager {
@@ -37,4 +39,9 @@ public class RoomManager {
                 .findFirst()
                 .orElse(null);
     }
+    
+    public void addRoom(Room room) {
+        activeRooms.put(room.getRoomId(), room);
+    }
+
 }

@@ -20,6 +20,7 @@ import java.net.URI;
 @NoArgsConstructor
 @ClientEndpoint
 
+// クライアント側の通信を担当するクラス
 public class ClientCommunicater implements Runnable {
     // タスク番号、送られてきた際は初期値の0のまま(林)
     private int taskNum = 10;
