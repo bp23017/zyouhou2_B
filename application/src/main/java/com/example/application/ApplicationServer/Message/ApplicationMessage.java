@@ -5,7 +5,7 @@ import java.util.List;
 
 @Data
 public class ApplicationMessage {
-    private String taskName; // "CREATE_ROOM" など
+    private String taskName; 
     private String matchId;
     private List<PlayerInfo> players;
 

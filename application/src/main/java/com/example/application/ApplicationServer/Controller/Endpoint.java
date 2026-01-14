@@ -5,6 +5,7 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
+// ゲームサーバーのエンドポイントを担当するクラス
 @Component
 @ServerEndpoint("/game-server") 
 public class Endpoint {

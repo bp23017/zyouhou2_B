@@ -38,8 +38,8 @@ public class Player {
         this.usedJust = false;
     }
 
-    // 卒業要件チェック (124単位以上)
+    // 卒業要件チェック (124単位以上)早く終わらせるために一旦20単位にしてます
     public boolean checkGraduationRequirement() {
-        return this.earnedUnits >= 124;
+        return this.earnedUnits >= 20;
     }
 }

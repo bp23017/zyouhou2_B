@@ -19,4 +19,5 @@ public class GameEvent {
     public static final int EFFECT_NONE = 0;
     public static final int EFFECT_SKIP = 1;
     public static final int EFFECT_BACK = 2;
+    public static final int EFFECT_RECOVERY = 3;
 }
