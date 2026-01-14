@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 
+// クライアント管理サーバーの通信を担当するコントローラ
 @Component
-@ServerEndpoint("/client-management")
+@ServerEndpoint("/matching")
 public class CommunicationController {
     public static final Map<String, Session> userSessions = new ConcurrentHashMap<>();
     private static final ClientManagementController authController = new ClientManagementController();

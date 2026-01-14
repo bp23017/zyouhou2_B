@@ -1,39 +1,60 @@
 package com.example.application.Client.Controller;
 
+import org.glassfish.grizzly.http.util.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.Map;
-
-
 
 @Controller
 public class ClientManager {
+
     private final RestTemplate restTemplate = new RestTemplate();
-    private final String AUTH_API_URL = "http://localhost:8080/api/auth";
 
+    @Value("${app.remote.base:http://192.168.10.113:8081}")
+    private String remoteBase;
 
-    @GetMapping("/") 
-    public String home() {
-        System.out.println("Accessed home page");
-        return "home"; 
+    @Value("${client.management.rest.base:http://localhost:8082/api}")
+    private String managementRestBase;
+    @Value("${client.management.ws.uri:ws://localhost:8080/app/matching}")
+    private String managementWsUri;
+    @Value("${app.server.ws.uri:ws://localhost:8081/game-server}")
+    private String appServerWsUri;
+    @Value("${app.server.rest.base:http://localhost:8081/api}")
+    private String appServerRestBase;
+
+    private String authApiUrl() {
+        return managementRestBase + "/auth";
     }
 
-    @GetMapping("/start") 
-    public String start() { 
+    @GetMapping("/")
+    public String home() {
+        System.out.println("Accessed home page");
+        return "home";
+    }
+
+    @GetMapping("/start")
+    public String start() {
         System.out.println("Accessed start page");
-        return "start"; 
+        return "start";
     }
 
     @PostMapping("/login-process")
     public String processLogin(@RequestParam String username, @RequestParam String password,
-                               HttpSession session, Model model) {
+            HttpSession session, Model model) {
         try {
             Map<String, String> request = Map.of("username", username, "password", password);
-            Map response = restTemplate.postForObject(AUTH_API_URL + "/login", request, Map.class);
+            Map response = restTemplate.postForObject(authApiUrl() + "/login", request, Map.class);
             if (response != null) {
                 session.setAttribute("loginName", username);
                 System.out.println("User " + username + " logged in successfully.");
@@ -49,9 +70,9 @@ public class ClientManager {
     @PostMapping("/register-process")
     public String processSignup(@RequestParam String username, @RequestParam String password, Model model) {
         try {
-            restTemplate.postForObject(AUTH_API_URL + "/register", 
-                Map.of("username", username, "password", password), String.class);
-                System.out.println("User " + username + " registered successfully.");
+            restTemplate.postForObject(authApiUrl() + "/register",
+                    Map.of("username", username, "password", password), String.class);
+            System.out.println("User " + username + " registered successfully.");
             return "redirect:/";
         } catch (Exception e) {
             model.addAttribute("error", "登録に失敗しました。");
@@ -65,10 +86,10 @@ public class ClientManager {
         String user = (String) session.getAttribute("loginName");
         if (user != null) {
             try {
-                restTemplate.postForObject(AUTH_API_URL + "/logout", Map.of("username", user), String.class);
+                restTemplate.postForObject(authApiUrl() + "/logout", Map.of("username", user), String.class);
                 System.out.println("User " + user + " logged out successfully.");
-            } catch (Exception e) { 
-                e.printStackTrace(); 
+            } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Logout failed for user " + user + ": " + e.getMessage());
             }
         }
@@ -77,8 +98,10 @@ public class ClientManager {
     }
 
     @GetMapping("/matchingWait")
-    public String matchingWait() {
+    public String matchingWait(Model model) {
         System.out.println("Accessed matchingWait page");
+        model.addAttribute("mgmtWsUri", managementWsUri);
+        model.addAttribute("mgmtRestBase", managementRestBase);
         return "matchingwait";
     }
 
@@ -88,12 +111,16 @@ public class ClientManager {
         return "rule";
     }
 
- @GetMapping("/game")
-    public String index(Model model, HttpSession session) {
+    @GetMapping("/game")
+    public String index(@RequestParam(required = false) String roomId,
+            @RequestParam(required = false) String playerId,
+            Model model, HttpSession session) {
         model.addAttribute("earnedUnits", 0);
         model.addAttribute("expectedUnits", 25);
         model.addAttribute("result", "ダイスを振ってください");
-        System.out.println("Accessed game page");
+        model.addAttribute("mgmtRestBase", managementRestBase);
+        model.addAttribute("appWsUri", appServerWsUri);
+        System.out.println("Accessed game page. roomId=" + roomId + ", playerId=" + playerId);
         return "game";
     }
 
@@ -103,9 +130,7 @@ public class ClientManager {
         if (username == null) return "redirect:/";
 
         try {
-            String url = AUTH_API_URL + "/score?username=" + username;
-            
-            // APIから JSON を RankRecord オブジェクトとして受け取る
+            String url = authApiUrl() + "/score?username=" + username;
             Map<String, Object> record = restTemplate.getForObject(url, Map.class);
 
             model.addAttribute("username", username);
@@ -114,9 +139,24 @@ public class ClientManager {
             e.printStackTrace();
             model.addAttribute("error", "戦績の取得に失敗しました。");
         }
-        
         return "score"; // score.html を表示
     }
-    
-    
+
+    @GetMapping("/proxy/result")
+    public ResponseEntity<String> proxyResult(@RequestParam String roomId,
+            @RequestParam(required = false) String playerId) {
+        String url = remoteBase + "/result?roomId=" + roomId;
+        if (playerId != null && !playerId.isBlank())
+            url += "&playerId=" + playerId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.ACCEPT, MediaType.TEXT_HTML_VALUE);
+
+        ResponseEntity<String> res = restTemplate.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(headers), String.class);
+
+        HttpHeaders out = new HttpHeaders();
+        out.setContentType(MediaType.TEXT_HTML);
+        return new ResponseEntity<>(res.getBody(), out, res.getStatusCode());
+    }
 }
