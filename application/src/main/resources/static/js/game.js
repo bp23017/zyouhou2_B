@@ -192,27 +192,45 @@ function updateItemButtons(usedDouble, usedJust) {
 
     // ダブルダイスボタンの制御
     const doubleBtn = document.getElementById('btn-double');
-    if (doubleBtn && usedDouble) {
-        doubleBtn.disabled = true;
-        doubleBtn.innerText = "ダブルダイス (使用済)";
-        doubleBtn.style.backgroundColor = "#999";
-        doubleBtn.style.cursor = "not-allowed";
-        message = "※一度使用したアイテムは使えません";
+    if (doubleBtn) {
+        if (usedDouble) {
+            doubleBtn.disabled = true;
+            doubleBtn.innerText = "ダブルダイス (使用済)";
+            doubleBtn.style.backgroundColor = "#999";
+            doubleBtn.style.cursor = "not-allowed";
+        } else {
+            // 復活時：ボタンを再度有効化
+            doubleBtn.disabled = false;
+            doubleBtn.innerText = "ダブルダイス";
+            doubleBtn.style.backgroundColor = "";
+            doubleBtn.style.cursor = "";
+        }
     }
 
     // ジャストダイスボタン群の制御
     const justContainer = document.getElementById('btn-just-container');
-    if (justContainer && usedJust) {
+    if (justContainer) {
         const buttons = justContainer.querySelectorAll('button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.style.backgroundColor = "#999";
-            btn.style.cursor = "not-allowed";
-        });
-        message = "※一度使用したアイテムは使えません";
+        if (usedJust) {
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.backgroundColor = "#999";
+                btn.style.cursor = "not-allowed";
+            });
+        } else {
+            // 復活時：ボタンを再度有効化
+            buttons.forEach(btn => {
+                btn.disabled = false;
+                btn.style.backgroundColor = "";
+                btn.style.cursor = "";
+            });
+        }
     }
 
     // メッセージ表示（どちらかが使用済みなら表示）
+    if (usedDouble || usedJust) {
+        message = "※一度使用したアイテムは使えません";
+    }
     if (warningMsg) {
         warningMsg.innerText = message;
     }
